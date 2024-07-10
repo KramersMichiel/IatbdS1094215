@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Services\Helpers;
+use App\Services\AlterObjectsService;
 
 class ProductController extends Controller
 {
@@ -36,44 +37,14 @@ class ProductController extends Controller
 
         $product = $request->user()->products()->create($validatedInfo);
 
-        $this->storeImage([
+        AlterObjectsService::storeImage([
             'image'=>$validatedImage['image'],
             'product'=>$product,
         ]);
  
-        $this->attachCatagories($request, $product);
+        AlterObjectsService::attachCatagories($request, $product);
 
         return redirect(route('page.index'));
-    }
-
-    public function attachCatagories(Request $request, Product $product)
-    {
-
-        $exCatagory = DB::table('catagories')->where('name', '=', $request->exclusiveCatagory)->first();
-
-        $product->catagories()->attach($exCatagory->id);
-
-        $catagories = DB::table('catagories')->where('type', '=', 'inclusive')->get();
-        
-        foreach($catagories as $catagory)
-        {
-            $name = $catagory->name;
-            if($request->$name == "on")
-            {
-                $product->catagories()->attach($catagory->id);
-            }
-            
-        }
-
-    }
-
-    public function storeImage(array $imageProduct)
-    {
-        $imageName = time().'.'.Str::random(10).'.'.$imageProduct['image']->extension();
-
-        $imageProduct['image']->move(public_path('images'), $imageName);
-
-        $imageProduct['product']->photo()->create(['url'=>$imageName]);
     }
 
     public function edit(Product $product): View

@@ -54,7 +54,7 @@ Route::resource('product.review', ReviewController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('ban', BanController::class)
-    ->only(['index/{user}', 'store/{user}', 'edit', 'update', 'destroy'])
+    ->only(['index/{user}', 'store/{user}', 'edit', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {

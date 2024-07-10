@@ -53,7 +53,9 @@ class BanController extends Controller
      */
     public function show(Ban $ban)
     {
-        //
+        return view('pages.bannedPage', [
+            'ban' => $ban,
+        ]);
     }
 
     /**

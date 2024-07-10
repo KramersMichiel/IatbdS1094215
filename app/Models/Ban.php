@@ -15,6 +15,10 @@ class Ban extends Model
         'banned_until',
     ];
 
+    protected $casts = [
+        'banned_until' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
